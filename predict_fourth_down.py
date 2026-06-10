@@ -70,10 +70,12 @@ wp_fg      = (fg_rate * wp_fg_make) + ((1 - fg_rate) * (1 - wp_fg_miss))
 # Punt
 wp_punt = 1 - get_win_prob(-score_diff, seconds, def_to, pos_to, 85, 1, 10)
 
-options = {'go_for_it': wp_go, 'field_goal': wp_fg, 'punt': wp_punt}
-recommendation = max(options, key=options.get)
-
 fg_applicable = yardline <= 55
+
+options = {'go_for_it': wp_go, 'punt': wp_punt}
+if fg_applicable:
+    options['field_goal'] = wp_fg
+recommendation = max(options, key=options.get)
 
 print(json.dumps({
     'go_for_it':        round(wp_go, 4),
